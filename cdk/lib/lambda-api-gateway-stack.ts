@@ -3,18 +3,19 @@ import { Construct } from 'constructs';
 import { RustFunction } from 'cargo-lambda-cdk';
 import * as path from 'path';
 import { RestApi, LambdaIntegration, Cors } from 'aws-cdk-lib/aws-apigateway';
+import { Architecture } from 'aws-cdk-lib/aws-lambda';
 
 export class InfrastructureStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
-
-    const fn = new RustFunction(this, 'package-name', {
-      manifestPath: path.resolve(__dirname, '..', '..'),
+    const fn = new RustFunction(this, 'sample-api', {
+      manifestPath: path.join(__dirname, '..', '..'),
+      functionName: 'hello-world-rust',
     });
 
     // Create an API Gateway resource for each of the CRUD operations
-    const api = new RestApi(this, 'marketplace', {
-      restApiName: 'Marketplace API',
+    const api = new RestApi(this, 'api', {
+      restApiName: 'Rust API',
 
     });
 
@@ -24,5 +25,6 @@ export class InfrastructureStack extends cdk.Stack {
     const trackUsage = routes.addResource('test');
     trackUsage.addCorsPreflight({ allowOrigins: ["*"], allowMethods: ["POST"], allowHeaders: ["*"], allowCredentials: true });
     trackUsage.addMethod('POST', new LambdaIntegration(fn));
+
   }
 }
