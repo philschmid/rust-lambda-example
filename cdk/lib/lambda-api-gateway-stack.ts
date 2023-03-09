@@ -8,6 +8,7 @@ import { Architecture } from 'aws-cdk-lib/aws-lambda';
 export class InfrastructureStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
+    // package-name is the name of the Rust pacakge name from the Cargo.toml file
     const fn = new RustFunction(this, 'sample-api', {
       manifestPath: path.join(__dirname, '..', '..'),
       functionName: 'hello-world-rust',
